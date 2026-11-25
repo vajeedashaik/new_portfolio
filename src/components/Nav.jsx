@@ -1,74 +1,75 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { profile } from "../data/content.js";
+import { useEffect, useRef, useState } from "react";
+import { profile } from "../data/site.js";
+import { scrollToId } from "../lib/motion.js";
 
 const LINKS = [
-  ["About", "about"],
-  ["Skills", "skills"],
-  ["Projects", "projects"],
-  ["Experience", "experience"],
-  ["Achievements", "achievements"],
+  ["Systems", "work"],
+  ["Stack", "stack"],
+  ["Journey", "journey"],
   ["Contact", "contact"],
 ];
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
+  const bar = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setHidden(y > 240 && y > last + 4);
+      if (y < last - 4) setHidden(false);
+      last = y;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar.current) bar.current.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+    };
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const go = (id) => (e) => {
     e.preventDefault();
     setOpen(false);
-    if (window.location.pathname !== "/") {
-      navigate("/");
-      setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }), 60);
-    } else {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollToId(id);
   };
 
   return (
-    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <div className="nav-inner">
-        <a href="/" className="nav-logo" onClick={go("top")}>
-          <span className="dot" />
-          Vajeeda Shaik
+    <header className={`nav ${hidden && !open ? "nav-hidden" : ""}`}>
+      <nav className="nav-pill glass" aria-label="Primary">
+        <a href="#top" className="nav-logo" onClick={go("top")} aria-label="Back to top">
+          <span className="nav-orb clay" />
+          <span className="nav-name">Shaik Vajeeda</span>
         </a>
         <div className="nav-links">
-          {LINKS.map(([label, id]) => (
+          {LINKS.map(([l, id]) => (
             <a key={id} href={`#${id}`} onClick={go(id)}>
-              {label}
+              {l}
             </a>
           ))}
-          <a className="nav-cta" href={profile.resumeUrl} target="_blank" rel="noreferrer">
-            Résumé
-          </a>
         </div>
-        <button className="nav-burger" onClick={() => setOpen((v) => !v)} aria-label="Menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            {open ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M3 12h18M3 6h18M3 18h18" />}
-          </svg>
+        <a className="btn btn-clay btn-sm nav-cta" href={profile.resume} target="_blank" rel="noreferrer" data-cursor="open pdf">
+          Résumé <span className="arr">↗</span>
+        </a>
+        <button className="nav-burger" aria-label="Menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+          <span />
+          <span />
         </button>
-      </div>
+        <span className="nav-progress" ref={bar} />
+      </nav>
       {open && (
-        <div className="mobile-menu">
-          {LINKS.map(([label, id]) => (
+        <div className="nav-sheet glass">
+          {LINKS.map(([l, id]) => (
             <a key={id} href={`#${id}`} onClick={go(id)}>
-              {label}
+              {l}
             </a>
           ))}
-          <a href={profile.resumeUrl} target="_blank" rel="noreferrer">
-            Résumé
+          <a href={profile.resume} target="_blank" rel="noreferrer">
+            Résumé ↗
           </a>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

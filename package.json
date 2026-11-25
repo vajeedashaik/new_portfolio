@@ -10,18 +10,38 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@react-spring/web": "^10.1.2",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "@splinetool/react-spline": "^4.2.0",
+    "@splinetool/runtime": "^2.0.211",
+    "@tsparticles/engine": "^4.6.0",
+    "@tsparticles/react": "^4.6.0",
+    "@tsparticles/slim": "^4.6.0",
+    "animejs": "^4.5.0",
+    "daisyui": "^5.8.2",
     "devicon": "^2.17.0",
     "framer-motion": "^13.2.0",
+    "gsap": "^3.15.1",
+    "lenis": "^1.3.27",
+    "motion": "^14.14.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.3"
+    "react-router-dom": "^7.18.3",
+    "three": "^0.187.0",
+    "trig-js": "^4.2.1"
   },
   "devDependencies": {
+    "@playwright/cli": "^0.1.25",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "awesome-design-md": "^1.1.0",
+    "impeccable": "^4.10.0",
     "oxlint": "^1.81.0",
     "sharp": "^0.35.4",
+    "skillui": "^1.3.4",
     "vite": "^8.3.0"
   }
 }
